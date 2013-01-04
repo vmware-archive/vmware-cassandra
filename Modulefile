@@ -9,3 +9,4 @@ project_page 'http://github.com/VMop/vmware-cassandra'
 
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>= 2.0.0'
+dependency 'nanliu/staging', '>= 0.2.1'

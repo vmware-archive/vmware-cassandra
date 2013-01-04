@@ -17,25 +17,19 @@ class cassandra (
   $source         = $cassandra::params::source
 ) inherits cassandra::params{
 
-  include ::java
+  include '::java'
+  include 'staging'
 
-  file { "/var/tmp/${source_file}":
-    ensure => present,
-    source => "${source}/${source_file}",
-  }
-
-  exec { 'install_cassandra':
-    command => "tar -xzf ${source_file} -C /opt",
-    cwd     => '/var/tmp',
-    path    => $path,
+  staging::deploy { $source_file:
+    target  => '/opt',
     creates => "/opt/apache-cassandra-${version}",
-    require => File["/var/tmp/${source_file}"],
+    source  => "${source}/${source_file}",
   }
 
   file { $cassandra_home:
     ensure  => link,
     target  => "/opt/apache-cassandra-${version}",
-    require => Exec['install_cassandra'],
+    require => Staging::Extract[$source_file],
   }
 
   file { [
@@ -46,7 +40,7 @@ class cassandra (
     '/var/log/cassandra'
   ]:
     ensure  => directory,
-    mode    => '0644',
+    mode    => '0755',
     owner   => 'root',
     group   => 'root',
     require => File[$cassandra_home]
@@ -68,8 +62,11 @@ class cassandra (
   }
 
   class { 'cassandra::service':
-    ensure  => running,
-    require => [File['/etc/init.d/cassandra'], Class['java']],
+    ensure    => running,
+    require   => [
+      Class['java'],
+      File['/etc/init.d/cassandra'],
+    ]
   }
 
 }

@@ -4,7 +4,7 @@
 # description: Enable Cassandra Service
 #
 #
-# Description:	Cassandra Server.
+# Description: Cassandra Server.
 # Processname: cassandra
 # Config: /opt/cassandra/conf/cassandra.yaml
 
@@ -16,7 +16,7 @@
 
 prog="Cassandra"
 pidfile="/var/run/cassandra.pid"
-progbin="/opt/cassandra/bin"
+progbin="<%=@cassandra_home%>/bin"
 lock="/var/lock/subsys/cassandra"
 logfile="/var/log/cassandra/service.log"
 
