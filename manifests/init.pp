@@ -11,11 +11,13 @@
 # Sample Usage:
 #
 class cassandra (
-  $version = $cassandra::params::version,
+  $version        = $cassandra::params::version,
   $cassandra_home = $cassandra::params::cassandra_home,
-  $source_file = $cassandra::params::source_file,
-  $source = $cassandra::params::source
+  $source_file    = $cassandra::params::source_file,
+  $source         = $cassandra::params::source
 ) inherits cassandra::params{
+
+    include ::java
 
     file { "/var/tmp/$source_file":
       ensure  => present,
@@ -66,8 +68,8 @@ class cassandra (
     }
 
     class { 'cassandra::service':
-      ensure  => running,
-      require => File['/etc/init.d/cassandra']
+      ensure      => running,
+      require     => [File['/etc/init.d/cassandra'], Class['java']],
     }
 
 }
