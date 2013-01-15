@@ -17,6 +17,8 @@ class cassandra (
   $source         = $cassandra::params::source
 ) inherits cassandra::params{
 
+    include ::java
+
     file { "/var/tmp/$source_file":
       ensure  => present,
       source  => "${source}/${source_file}",
@@ -66,8 +68,8 @@ class cassandra (
     }
 
     class { 'cassandra::service':
-      ensure  => running,
-      require => File['/etc/init.d/cassandra']
+      ensure      => running,
+      require     => [File['/etc/init.d/cassandra'], Class['java']],
     }
 
 }
