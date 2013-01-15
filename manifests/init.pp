@@ -68,8 +68,8 @@ class cassandra (
     }
 
     class { 'cassandra::service':
-      ensure      => running,
-      require     => [File['/etc/init.d/cassandra'], Class['java']],
+      ensure  => running,
+      require => [File['/etc/init.d/cassandra'], Class['java']],
     }
 
 }
