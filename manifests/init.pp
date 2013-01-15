@@ -11,10 +11,10 @@
 # Sample Usage:
 #
 class cassandra (
-  $version = $cassandra::params::version,
+  $version        = $cassandra::params::version,
   $cassandra_home = $cassandra::params::cassandra_home,
-  $source_file = $cassandra::params::source_file,
-  $source = $cassandra::params::source
+  $source_file    = $cassandra::params::source_file,
+  $source         = $cassandra::params::source
 ) inherits cassandra::params{
 
     file { "/var/tmp/$source_file":
