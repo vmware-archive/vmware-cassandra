@@ -11,29 +11,31 @@
 # Sample Usage:
 #
 class cassandra (
-  $version = $cassandra::params::version,
+  $version        = $cassandra::params::version,
   $cassandra_home = $cassandra::params::cassandra_home,
-  $source_file = $cassandra::params::source_file,
-  $source = $cassandra::params::source
+  $source_file    = undef,
+  $source         = $cassandra::params::source
 ) inherits cassandra::params{
 
-  file { "/var/tmp/${source_file}":
-    ensure => present,
-    source => "${source}/${source_file}",
+  include '::java'
+  include 'staging'
+
+  if $source_file {
+    $filename = $source_file
+  } else {
+    $filename = "apache-cassandra-${version}-bin.tar.gz"
   }
 
-  exec { 'install_cassandra':
-    command => "tar -xzf ${source_file} -C /opt",
-    cwd     => '/var/tmp',
-    path    => $path,
+  staging::deploy { $filename:
+    target  => '/opt',
     creates => "/opt/apache-cassandra-${version}",
-    require => File["/var/tmp/${source_file}"],
+    source  => "${source}/${filename}",
   }
 
   file { $cassandra_home:
     ensure  => link,
     target  => "/opt/apache-cassandra-${version}",
-    require => Exec['install_cassandra'],
+    require => Staging::Extract[$filename],
   }
 
   file { [
@@ -44,16 +46,16 @@ class cassandra (
     '/var/log/cassandra'
   ]:
     ensure  => directory,
-    mode    => '0644',
+    mode    => '0755',
     owner   => 'root',
     group   => 'root',
-    require => File[$cassandra_home]
+    require => File[$cassandra_home],
   }
 
   file { '/usr/local/bin/cassandra-cli':
     ensure  => link,
     target  => "${cassandra_home}/bin/cassandra-cli",
-    require => File[$cassandra_home]
+    require => File[$cassandra_home],
   }
 
   file { '/etc/init.d/cassandra':
@@ -62,12 +64,15 @@ class cassandra (
     owner   => 'root',
     group   => 'root',
     content => template('cassandra/cassandra_init.erb'),
-    require => File[$cassandra_home]
+    require => File[$cassandra_home],
   }
 
   class { 'cassandra::service':
-    ensure  => running,
-    require => File['/etc/init.d/cassandra']
+    ensure    => running,
+    require   => [
+      Class['java'],
+      File['/etc/init.d/cassandra'],
+    ]
   }
 
 }
