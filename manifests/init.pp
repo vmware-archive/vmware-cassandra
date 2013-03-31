@@ -67,6 +67,16 @@ class cassandra (
     require => File[$cassandra_home],
   }
 
+  file { '/opt/cassandra/conf/cassandra.yaml':
+    ensure  => present,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+    content => template('cassandra/cassandra_yaml.erb'),
+    require => File[$cassandra_home],
+    notify  => Service["cassandra"],
+  }
+
   class { 'cassandra::service':
     ensure    => running,
     require   => [
@@ -74,5 +84,4 @@ class cassandra (
       File['/etc/init.d/cassandra'],
     ]
   }
-
 }

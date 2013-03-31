@@ -6,15 +6,25 @@ This module installs Apache Cassandra.
 ## Installation
 On the Puppet Master server:
 
-	$ cd /etc/puppetlabs/puppet/modules
-	$ git clone https://github.com/VMop/vmware-cassandra.git
+$ cd /etc/puppetlabs/puppet/modules
+$ git clone https://github.com/VMop/vmware-cassandra.git
 
 ## Usage
 For a standard install use:
 
-	node 'node1.local' {
-	  include cassandra
-	}
+```puppet
+node 'node1.local' {
+  include cassandra
+}
+```
+
+# To install Opscenter Community Edition on a node
+
+```puppet
+node 'node1.local' {
+  include cassandra::opscenter
+}
+```
 
 ## Contributing
  1. Fork it
