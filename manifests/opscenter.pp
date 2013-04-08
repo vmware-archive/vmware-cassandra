@@ -45,7 +45,7 @@ class cassandra::opscenter {
     require => [ Package["opscenter-free"], File["/opt/opcenter"] ]
   }
 
-  exec { "/opt/agent/bin/install_agent.sh /opt/agent/opscenter-agent.rpm $ipaddress":
+  exec { "/opt/opcenter/agent/bin/install_agent.sh /opt/opcenter/agent/opscenter-agent.rpm $ipaddress":
     refreshonly => true,
     path        => ["/usr/bin", "/usr/sbin"],
     subscribe   => Staging::Extract["agent.tar.gz"],
