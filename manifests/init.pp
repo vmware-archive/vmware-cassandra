@@ -14,7 +14,9 @@ class cassandra (
   $version        = $cassandra::params::version,
   $cassandra_home = $cassandra::params::cassandra_home,
   $source_file    = undef,
-  $source         = $cassandra::params::source
+  $source         = $cassandra::params::source,
+  $cluster_name   = undef,
+  $seed_nodes     = undef,
 ) inherits cassandra::params{
 
   include '::java'
@@ -24,6 +26,18 @@ class cassandra (
     $filename = $source_file
   } else {
     $filename = "apache-cassandra-${version}-bin.tar.gz"
+  }
+
+  if $cluster_name {
+    $cluster = $cluster_name
+  } else {
+    $cluster = 'Test Cluster'
+  }
+
+  if $seed_nodes {
+    $seeds = $seed_nodes
+  } else {
+    $seeds = '127.0.0.1'
   }
 
   staging::deploy { $filename:

@@ -11,7 +11,7 @@
 # Sample Usage:
 #
 class cassandra::params {
-  $version        = '1.1.7'
+  $version        = '1.2.4'
   $source         = 'puppet:///modules/cassandra'
   $cassandra_home = '/opt/cassandra'
 }
