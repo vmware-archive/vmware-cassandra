@@ -35,9 +35,9 @@ class cassandra (
   }
 
   if $seed_nodes {
-    $seeds = $seed_nodes
+    $seeds = flatten([$seed_nodes])
   } else {
-    $seeds = '127.0.0.1'
+    $seeds = ['127.0.0.1']
   }
 
   staging::deploy { $filename:
