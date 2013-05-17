@@ -12,6 +12,6 @@
 #
 class cassandra::params {
   $version        = '1.2.4'
-  $source         = 'puppet:///modules/cassandra'
+  $source         = 'http://archive.apache.org/dist/cassandra'
   $cassandra_home = '/opt/cassandra'
 }

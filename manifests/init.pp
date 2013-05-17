@@ -40,10 +40,19 @@ class cassandra (
     $seeds = ['127.0.0.1']
   }
 
-  staging::deploy { $filename:
-    target  => '/opt',
-    creates => "/opt/apache-cassandra-${version}",
-    source  => "${source}/${filename}",
+  if 'http://archive.apache.org' in $source {
+    staging::deploy { $filename:
+      target  => '/opt',
+      creates => "/opt/apache-cassandra-${version}",
+      source  => "${source}/${version}/${filename}",
+    }
+  }
+  else {
+    staging::deploy { $filename:
+      target  => '/opt',
+      creates => "/opt/apache-cassandra-${version}",
+      source  => "${source}/${filename}",
+    }
   }
 
   file { $cassandra_home:
