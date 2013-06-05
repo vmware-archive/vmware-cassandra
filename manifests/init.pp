@@ -17,6 +17,9 @@ class cassandra (
   $source         = $cassandra::params::source,
   $cluster_name   = undef,
   $seed_nodes     = undef,
+  $ssl            = false,
+  $keystore       = 'conf/.keystore',
+  $truststore     = 'conf/.truststore'
 ) inherits cassandra::params{
 
   include '::java'
