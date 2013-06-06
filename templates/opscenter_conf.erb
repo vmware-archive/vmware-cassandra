@@ -1,15 +1,21 @@
 # opscenterd.conf
 
 [webserver]
-port = 8888
+port = <%= @webserver_port %>
 interface = <%=@ipaddress%>
 # The following settings can be used to enable ssl support for the opscenter
 # web application. Change these values to point to the ssl certificate and key
 # that you wish to use for your OpsCenter install, as well as the port you would like
 # to serve ssl traffic from.
+<% if @ssl %>
+ssl_keyfile = <%= @private_key %>
+ssl_certfile = <%= @public_key %>
+ssl_port = <%= @ssl_port %>
+<% else %>
 #ssl_keyfile = /var/lib/opscenter/ssl/opscenter.key
 #ssl_certfile = /var/lib/opscenter/ssl/opscenter.pem
 #ssl_port = 8443
+<% end %>
 
 [logging]
 # level may be TRACE, DEBUG, INFO, WARN, or ERROR
