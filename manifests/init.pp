@@ -20,7 +20,7 @@ class cassandra (
   $ssl            = false,
   $keystore       = 'conf/.keystore',
   $truststore     = 'conf/.truststore'
-) inherits cassandra::params{
+) inherits cassandra::params {
 
   include '::java'
   include 'staging'
@@ -93,14 +93,14 @@ class cassandra (
     require => File[$cassandra_home],
   }
 
-  file { '/opt/cassandra/conf/cassandra.yaml':
+  file { "${cassandra_home}/conf/cassandra.yaml":
     ensure  => present,
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
     content => template('cassandra/cassandra_yaml.erb'),
     require => File[$cassandra_home],
-    notify  => Service["cassandra"],
+    notify  => Service['cassandra'],
   }
 
   class { 'cassandra::service':
