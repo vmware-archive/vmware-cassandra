@@ -6,7 +6,7 @@ describe 'cassandra::opscenter' do
       should contain_yumrepo 'Datastax'
 
       should contain_package 'opscenter-free'
-      should contain_file '/opt/opcenter'
+      should contain_file '/opt/opscenter'
       should contain_file('/etc/opscenter/opscenterd.conf').
         with_content(%r[port = 8888])
       should contain_file('/etc/opscenter/opscenterd.conf').

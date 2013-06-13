@@ -32,7 +32,7 @@ class cassandra::opscenter (
     notify  => Service['opscenterd'],
   }
 
-  file { '/opt/opcenter':
+  file { '/opt/opscenter':
     ensure => directory,
     owner  => '0',
     group  => '0',
@@ -46,13 +46,13 @@ class cassandra::opscenter (
   }
 
   staging::deploy { 'agent.tar.gz':
-    target  => '/opt/opcenter',
-    creates => '/opt/opcenter/agent',
+    target  => '/opt/opscenter',
+    creates => '/opt/opscenter/agent',
     source  => '/usr/share/opscenter/agent.tar.gz',
-    require => [ Package['opscenter-free'], File['/opt/opcenter'] ]
+    require => [ Package['opscenter-free'], File['/opt/opscenter'] ]
   }
 
-  exec { "/opt/opcenter/agent/bin/install_agent.sh /opt/opcenter/agent/opscenter-agent.rpm ${::ipaddress}":
+  exec { "/opt/opscenter/agent/bin/install_agent.sh /opt/opscenter/agent/opscenter-agent.rpm ${::ipaddress}":
     refreshonly => true,
     path        => $::path,
     subscribe   => Staging::Extract['agent.tar.gz'],
