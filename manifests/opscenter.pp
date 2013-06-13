@@ -1,4 +1,10 @@
-class cassandra::opscenter {
+class cassandra::opscenter (
+  $webserver_port = '8888'
+  $ssl            = false,
+  $public_key     = '/var/lib/opscenter/ssl/opscenter.pem',
+  $private_key    = '/var/lib/opscenter/ssl/opscenter.key',
+  $ssl_port       = '8443'
+){
 
   yumrepo { "Datastax":
     name     => "Datastax",
