@@ -17,6 +17,7 @@ task :lint do
 end
 
 # Initialize vagrant instance for testing
+desc "Powers on Vagrant VMs with specific manifests"
 task :vagrant, :manifest do |t, args|
   Rake::Task["spec_prep"].execute
 
@@ -30,6 +31,7 @@ task :vagrant, :manifest do |t, args|
 end
 
 # Cleanup vagrant environment
+desc "Destroys Vagrant VMs and cleanup spec directory"
 task :vagrant_clean do
   `vagrant destroy`
   Rake::Task["spec_clean"].execute
