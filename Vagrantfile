@@ -7,11 +7,11 @@ Vagrant.configure("2") do |config|
   # please see the online documentation at vagrantup.com.
 
   #config.vm.synced_folder "manifests", "/tmp/manifests", "tests"
-  config.vm.synced_folder "./", "/etc/puppet/modules/profile"
+  config.vm.synced_folder "./", "/etc/puppet/modules/cassandra"
 
   config.vm.define :cassandra do |m|
-    m.vm.box = "centos63"
-    m.vm.box_url = "https://dl.dropbox.com/s/eqdrqnla4na8qax/centos63.box"
+    m.vm.box = "centos64"
+    m.vm.box_url = "https://dl.dropboxusercontent.com/u/1075709/box/centos64.boxs"
 
     m.vm.hostname = 'cassandra'
     m.vm.provider :vmware_fusion do |v|
