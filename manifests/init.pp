@@ -22,8 +22,8 @@ class cassandra (
   $truststore     = 'conf/.truststore'
 ) inherits cassandra::params {
 
-  include '::java'
-  include 'staging'
+  require '::java'
+  include '::staging'
 
   if $source_file {
     $filename = $source_file
@@ -43,25 +43,28 @@ class cassandra (
     $seeds = ['127.0.0.1']
   }
 
+  $target = staging_parse($cassandra_home, 'parent')
+  $cass_dir = "${target}/apache-cassandra-${version}"
+
   if 'http://archive.apache.org' in $source {
     staging::deploy { $filename:
-      target  => '/opt',
-      creates => "/opt/apache-cassandra-${version}",
+      target  => $target,
+      creates => $cass_dir,
       source  => "${source}/${version}/${filename}",
     }
   }
   else {
     staging::deploy { $filename:
-      target  => '/opt',
-      creates => "/opt/apache-cassandra-${version}",
+      target  => $target,
+      creates => $cass_dir,
       source  => "${source}/${filename}",
     }
   }
 
   file { $cassandra_home:
     ensure  => link,
-    target  => "/opt/apache-cassandra-${version}",
-    require => Staging::Extract[$filename],
+    target  => $cass_dir,
+    require => Staging::Deploy[$filename],
   }
 
   file { [
@@ -91,6 +94,7 @@ class cassandra (
     group   => 'root',
     content => template('cassandra/cassandra_init.erb'),
     require => File[$cassandra_home],
+    notify  => Class['cassandra::service'],
   }
 
   file { "${cassandra_home}/conf/cassandra.yaml":
@@ -100,14 +104,8 @@ class cassandra (
     group   => 'root',
     content => template('cassandra/cassandra_yaml.erb'),
     require => File[$cassandra_home],
-    notify  => Service['cassandra'],
+    notify  => Class['cassandra::service'],
   }
 
-  class { 'cassandra::service':
-    ensure    => running,
-    require   => [
-      Class['java'],
-      File['/etc/init.d/cassandra'],
-    ]
-  }
+  include 'cassandra::service'
 }

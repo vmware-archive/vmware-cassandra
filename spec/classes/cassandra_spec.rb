@@ -6,18 +6,29 @@ describe 'cassandra' do
       should include_class 'java'
       should include_class 'staging'
 
-      should contain_staging__deploy('apache-cassandra-1.2.4-bin.tar.gz').
-        with_source('http://archive.apache.org/dist/cassandra/1.2.4/apache-cassandra-1.2.4-bin.tar.gz')
+      should contain_staging__deploy('apache-cassandra-1.2.9-bin.tar.gz').with({
+        :target => '/opt',
+        :creates => '/opt/apache-cassandra-1.2.9',
+        :source => 'http://archive.apache.org/dist/cassandra/1.2.9/apache-cassandra-1.2.9-bin.tar.gz',
+      })
 
+      should contain_file('/opt/cassandra').with({
+        :ensure => 'link',
+        :target => '/opt/apache-cassandra-1.2.9',
+        :require => 'Staging::Deploy[apache-cassandra-1.2.9-bin.tar.gz]',
+      })
       [
-        '/opt/cassandra',
         '/var/lib/cassandra',
         '/var/lib/cassandra/data',
         '/var/lib/cassandra/commitlog',
         '/var/lib/cassandra/saved_caches',
         '/var/log/cassandra'
-      ].each do |f|
-        should contain_file f
+      ].each do |file|
+        should contain_file(file).with({
+          :ensure => :directory,
+          :require => 'File[/opt/cassandra]',
+        })
+
       end
 
       should contain_file('/usr/local/bin/cassandra-cli').

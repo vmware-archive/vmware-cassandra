@@ -29,6 +29,5 @@ class cassandra::service(
     enable     => $enable_real,
     hasrestart => true,
     hasstatus  => true,
-    require    => [ File['/etc/init.d/cassandra'], File['/opt/cassandra/conf/cassandra.yaml'] ]
   }
 }
