@@ -19,7 +19,7 @@ class cassandra::opscenter (
     'opscenter-free',
   ]:
     ensure  => latest,
-    require => Yumrepo[ 'Datastax' ],
+    require => Yumrepo['Datastax'],
   }
 
   file { '/etc/opscenter/opscenterd.conf':
@@ -29,7 +29,6 @@ class cassandra::opscenter (
     group   => 'opscenter',
     content => template('cassandra/opscenter_conf.erb'),
     require => Package['opscenter-free'],
-    notify  => Service['opscenterd'],
   }
 
   file { '/opt/opscenter':
@@ -40,11 +39,12 @@ class cassandra::opscenter (
   }
 
   service { 'opscenterd':
-    ensure  => 'running',
-    enable  => true,
-    require => [ Package['opscenter-free'], File['/etc/opscenter/opscenterd.conf'] ],
+    ensure    => 'running',
+    enable    => true,
+    subscribe => File['/etc/opscenter/opscenterd.conf'],
   }
 
+  # Do not use /opt/opcenter it is blown away by the install_agent.sh script
   staging::deploy { 'agent.tar.gz':
     target  => '/opt/opscenter',
     creates => '/opt/opscenter/agent',
@@ -55,6 +55,6 @@ class cassandra::opscenter (
   exec { "/opt/opscenter/agent/bin/install_agent.sh /opt/opscenter/agent/opscenter-agent.rpm ${::ipaddress}":
     refreshonly => true,
     path        => $::path,
-    subscribe   => Staging::Extract['agent.tar.gz'],
+    subscribe   => Staging::Deploy['agent.tar.gz'],
   }
 }

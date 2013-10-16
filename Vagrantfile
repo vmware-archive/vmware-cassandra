@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     m.vm.provision :puppet do |puppet|
       puppet.manifests_path = "tests"
       puppet.module_path    = "spec/fixtures/modules/"
-      puppet.manifest_file  = "init.pp"
+      puppet.manifest_file  = ENV['VAGRANT_MANIFEST'] || "init.pp"
     end
   end
 end

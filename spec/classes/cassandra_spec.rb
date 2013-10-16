@@ -17,6 +17,7 @@ describe 'cassandra' do
         :target => '/opt/apache-cassandra-1.2.9',
         :require => 'Staging::Deploy[apache-cassandra-1.2.9-bin.tar.gz]',
       })
+
       [
         '/var/lib/cassandra',
         '/var/lib/cassandra/data',
@@ -47,9 +48,17 @@ describe 'cassandra' do
     }}
 
     it do
-      # This is busted, we can only deploy to /opt.
-      #should contain_staging__deploy('apache-cassandra-1.2.4-bin.tar.gz').
-      #  with_target('/var/opt/cassandra')
+      should contain_staging__deploy('apache-cassandra-1.2.9-bin.tar.gz').with({
+        :target => '/var/opt',
+        :creates => '/var/opt/apache-cassandra-1.2.9',
+        :source => 'http://archive.apache.org/dist/cassandra/1.2.9/apache-cassandra-1.2.9-bin.tar.gz',
+      })
+
+      should contain_file('/var/opt/cassandra').with({
+        :ensure => 'link',
+        :target => '/var/opt/apache-cassandra-1.2.9',
+        :require => 'Staging::Deploy[apache-cassandra-1.2.9-bin.tar.gz]',
+      })
 
       [
         '/var/opt/cassandra',

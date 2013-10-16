@@ -22,6 +22,7 @@ task :vagrant, :manifest do |t, args|
   Rake::Task["spec_prep"].execute
 
   prefix = "VAGRANT_MANIFEST='#{args[:manifest]||'init.pp'}'"
+  puts prefix
 
   provision = false
   io_popen("export #{prefix}; vagrant up --provider=vmware_fusion") do |line|
