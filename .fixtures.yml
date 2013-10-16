@@ -1,5 +1,5 @@
 fixtures:
   repositories:
     stdlib:  'git://github.com/puppetlabs/puppetlabs-stdlib.git'
-    java:    'git@github.com:VMop/vmware-java.git'
+    java:    'git://github.com/vmware/vmware-java.git'
     staging: 'git://github.com/nanliu/puppet-staging.git'
